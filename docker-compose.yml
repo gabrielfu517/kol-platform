@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14-alpine
+    container_name: kol_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kol_platform
+      POSTGRES_USER: ${POSTGRES_USER:-koluser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - kol_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-koluser}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Flask Backend
+  backend:
+    build: ./backend
+    container_name: kol_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-koluser}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/kol_platform
+      SECRET_KEY: ${SECRET_KEY:-your-production-secret-key-change-this}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-your-production-jwt-secret-key-change-this}
+      FLASK_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - kol_network
+    ports:
+      - "5001:5001"
+
+  # React Frontend
+  frontend:
+    build: 
+      context: ./frontend
+      args:
+        REACT_APP_API_URL: ${API_URL:-http://your-domain.com/api}
+    container_name: kol_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - kol_network
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  kol_network:
+    driver: bridge
+
