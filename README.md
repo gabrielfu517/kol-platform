@@ -15,6 +15,10 @@ A full-stack Key Opinion Leader (KOL) management platform for connecting brands 
 - 🎨 **Modern UI** - Beautiful Tailwind CSS design with animations
 - 🔒 **Role-Based Access** - Admin and client roles with different permissions
 - 📱 **Responsive Design** - Works perfectly on all devices
+- 📧 **Influencer Invitations** - Email-based invitation system for onboarding influencers
+- 📸 **Instagram Integration** - OAuth-based Instagram account connection with auto-import
+- ✅ **Consent Management** - GDPR-compliant consent flow for data usage
+- 🔗 **Token-Based Registration** - Secure, time-limited registration links
 
 ## 🚀 Tech Stack
 
@@ -23,6 +27,8 @@ A full-stack Key Opinion Leader (KOL) management platform for connecting brands 
 - **PostgreSQL** - Relational database
 - **SQLAlchemy** - ORM
 - **JWT** - Authentication
+- **Flask-Mail** - Email sending
+- **Flask-Migrate** - Database migrations
 - **Gunicorn** - Production server
 
 ### Frontend
@@ -103,6 +109,46 @@ Create and manage marketing campaigns with KOL assignments.
 ### Demo Credentials
 - **Client**: demo@kolplatform.com / demo123
 - **Admin**: admin@kolplatform.com / admin123
+
+## 📧 Influencer Registration Feature
+
+The platform now includes a complete influencer onboarding system:
+
+### How it Works
+1. **Admin sends invitation** - Email with unique registration link
+2. **Influencer accepts terms** - Consent form with data usage policy
+3. **Instagram connection** - OAuth integration for automatic profile import
+4. **Profile creation** - KOL profile automatically created with Instagram data
+
+### Quick Setup
+
+```bash
+# Backend: Configure email and Instagram API
+cd backend
+cp .env.example .env
+# Edit .env with your credentials
+
+# Run database migration
+flask db upgrade
+
+# Test the feature
+# 1. Login as admin
+# 2. Go to 📧 Invites page
+# 3. Send an invitation
+# 4. Use the registration link
+```
+
+### Documentation
+- **Full Guide**: See [INFLUENCER_REGISTRATION.md](INFLUENCER_REGISTRATION.md)
+- **Quick Start**: See [QUICK_START_INFLUENCER.md](QUICK_START_INFLUENCER.md)
+
+### Key Features
+- ✅ Email invitations with secure tokens (7-day expiration)
+- ✅ GDPR-compliant consent management
+- ✅ Instagram OAuth integration
+- ✅ Automatic profile data import
+- ✅ Admin dashboard for invite tracking
+- ✅ Works without email/Instagram for testing
 
 ## 🐳 Docker Deployment
 

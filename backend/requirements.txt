@@ -7,4 +7,7 @@ Flask-Migrate==4.0.5
 Flask-JWT-Extended==4.5.3
 Werkzeug==3.0.1
 gunicorn==21.2.0
+Flask-Mail==0.9.1
+requests==2.31.0
+itsdangerous==2.1.2
 

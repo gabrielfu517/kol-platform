@@ -11,6 +11,9 @@ import KOLDetail from './pages/KOLDetail';
 import KOLForm from './pages/KOLForm';
 import Campaigns from './pages/Campaigns';
 import CampaignForm from './pages/CampaignForm';
+import InfluencerRegister from './pages/InfluencerRegister';
+import InstagramCallback from './pages/InstagramCallback';
+import InfluencerInvites from './pages/InfluencerInvites';
 
 function App() {
   return (
@@ -19,6 +22,10 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          
+          {/* Public influencer registration routes */}
+          <Route path="/influencer/register" element={<InfluencerRegister />} />
+          <Route path="/influencer/instagram-callback" element={<InstagramCallback />} />
           
           <Route
             path="/"
@@ -111,6 +118,18 @@ function App() {
                 <div className="min-h-screen flex flex-col">
                   <Navbar />
                   <CampaignForm />
+                </div>
+              </PrivateRoute>
+            }
+          />
+          
+          <Route
+            path="/invites"
+            element={
+              <PrivateRoute>
+                <div className="min-h-screen flex flex-col">
+                  <Navbar />
+                  <InfluencerInvites />
                 </div>
               </PrivateRoute>
             }
