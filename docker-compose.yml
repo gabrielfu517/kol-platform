@@ -8,14 +8,14 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: kol_platform
-      POSTGRES_USER: ${POSTGRES_USER:-koluser}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_USER: ${POSTGRES_USER:-kol_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-KOL_SecurePass_2024_ChangeThis!}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - kol_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-koluser}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kol_admin}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,9 +26,9 @@ services:
     container_name: kol_backend
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-koluser}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/kol_platform
-      SECRET_KEY: ${SECRET_KEY:-your-production-secret-key-change-this}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-your-production-jwt-secret-key-change-this}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-kol_admin}:${POSTGRES_PASSWORD:-KOL_SecurePass_2024_ChangeThis!}@postgres:5432/kol_platform
+      SECRET_KEY: ${SECRET_KEY:-3H_DTTbZeDnjf29iJIP5Yahi_XOFxT6Wkdl-gx6Q5WMb3Z0WqZoOIRINFlQqVJfYd_4}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-7DiPdXU0tzmNLfgLmxjQTwqUUfjCq0ay74FnZaumy4KdrrKmBOjBu0ProAZhqjfPDPs}
       FLASK_ENV: production
     depends_on:
       postgres:
