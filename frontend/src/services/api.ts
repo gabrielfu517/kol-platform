@@ -57,6 +57,35 @@ export interface Campaign {
   updated_at: string;
 }
 
+export interface Job {
+  id: number;
+  owner_user_id: number;
+  title: string;
+  description?: string;
+  budget: number;
+  restaurant_name?: string;
+  address?: string;
+  will_pay: boolean;
+  suggested_turnaround_days?: number;
+  restrictions: string[];
+  content_types: string[];
+  status: 'draft' | 'published' | 'closed';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface JobAssignment {
+  id: number;
+  job_id: number;
+  kol_id: number;
+  invite_status: 'pending' | 'accepted' | 'rejected' | 'withdrawn';
+  invited_at?: string;
+  responded_at?: string;
+  note?: string;
+  job?: Job;
+  kol?: KOL;
+}
+
 // Auth
 export const authAPI = {
   register: (data: { email: string; password: string; full_name: string; role?: string }) =>
@@ -75,13 +104,28 @@ export const kolAPI = {
   delete: (id: number) => api.delete(`/kols/${id}`),
 };
 
-// Campaigns
-export const campaignAPI = {
-  getAll: () => api.get<Campaign[]>('/campaigns'),
-  getOne: (id: number) => api.get<Campaign>(`/campaigns/${id}`),
-  create: (data: Partial<Campaign>) => api.post<Campaign>('/campaigns', data),
-  update: (id: number, data: Partial<Campaign>) => api.put<Campaign>(`/campaigns/${id}`, data),
-  delete: (id: number) => api.delete(`/campaigns/${id}`),
+// Jobs (owner/admin)
+export const jobsAPI = {
+  list: () => api.get<Job[]>('/jobs'),
+  get: (id: number) => api.get<Job & { assignments: JobAssignment[] }>(`/jobs/${id}`),
+  create: (data: Partial<Job> & { content_types: string[]; restrictions?: string[] }) =>
+    api.post<Job>('/jobs', data),
+  update: (id: number, data: Partial<Job> & { content_types?: string[]; restrictions?: string[] }) =>
+    api.put<Job>(`/jobs/${id}`, data),
+  remove: (id: number) => api.delete(`/jobs/${id}`),
+  publish: (id: number) => api.post<Job>(`/jobs/${id}/publish`, {}),
+  close: (id: number) => api.post<Job>(`/jobs/${id}/close`, {}),
+  inviteKOLs: (id: number, kolIds: number[]) => api.post<{ created: number }>(`/jobs/${id}/invites`, { kol_ids: kolIds }),
+  withdrawInvite: (id: number, kolId: number) =>
+    api.post<JobAssignment>(`/jobs/${id}/invites/${kolId}/withdraw`, {}),
+};
+
+// KOL-facing
+export const myJobsAPI = {
+  list: (status?: 'pending' | 'accepted' | 'rejected' | 'withdrawn') =>
+    api.get<JobAssignment[]>('/my-jobs', { params: { status } }),
+  accept: (assignmentId: number) => api.post<JobAssignment>(`/my-jobs/${assignmentId}/accept`, {}),
+  reject: (assignmentId: number) => api.post<JobAssignment>(`/my-jobs/${assignmentId}/reject`, {}),
 };
 
 // Stats

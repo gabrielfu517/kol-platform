@@ -12,7 +12,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
     full_name = db.Column(db.String(100), nullable=False)
-    role = db.Column(db.String(20), default='client')  # client, admin
+    role = db.Column(db.String(20), default='client')  # client, admin, kol
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     def set_password(self, password):
@@ -61,6 +61,7 @@ class KOL(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     campaigns = db.relationship('Campaign', backref='kol', lazy=True)
+    job_assignments = db.relationship('JobAssignment', backref='kol', lazy=True)
     
     def to_dict(self):
         return {
@@ -150,5 +151,72 @@ class InfluencerInvite(db.Model):
             'expires_at': self.expires_at.isoformat(),
             'used_at': self.used_at.isoformat() if self.used_at else None,
             'created_at': self.created_at.isoformat()
+        }
+
+
+class Job(db.Model):
+    __tablename__ = 'jobs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    owner_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    budget = db.Column(db.Float, default=0.0)
+    restaurant_name = db.Column(db.String(200))
+    address = db.Column(db.String(255))
+    will_pay = db.Column(db.Boolean, default=False)
+    suggested_turnaround_days = db.Column(db.Integer)  # 1-60
+
+    # restrictions and content types stored as CSV for simplicity
+    restrictions = db.Column(db.String(200))  # e.g. "time,date,budget,alcohol,plus_one,not_free"
+    content_types = db.Column(db.String(200))  # e.g. "ig_reel,post"
+
+    status = db.Column(db.String(20), default='draft')  # draft, published, closed
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    owner = db.relationship('User', backref='jobs')
+    assignments = db.relationship('JobAssignment', backref='job', lazy=True, cascade="all, delete-orphan")
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'owner_user_id': self.owner_user_id,
+            'title': self.title,
+            'description': self.description,
+            'budget': self.budget,
+            'restaurant_name': self.restaurant_name,
+            'address': self.address,
+            'will_pay': self.will_pay,
+            'suggested_turnaround_days': self.suggested_turnaround_days,
+            'restrictions': (self.restrictions.split(',') if self.restrictions else []),
+            'content_types': (self.content_types.split(',') if self.content_types else []),
+            'status': self.status,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat()
+        }
+
+
+class JobAssignment(db.Model):
+    __tablename__ = 'job_assignments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('jobs.id'), nullable=False, index=True)
+    kol_id = db.Column(db.Integer, db.ForeignKey('kols.id'), nullable=False, index=True)
+    invite_status = db.Column(db.String(20), default='pending')  # pending, accepted, rejected, withdrawn
+    invited_at = db.Column(db.DateTime, default=datetime.utcnow)
+    responded_at = db.Column(db.DateTime, nullable=True)
+    note = db.Column(db.Text)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'job_id': self.job_id,
+            'kol_id': self.kol_id,
+            'invite_status': self.invite_status,
+            'invited_at': self.invited_at.isoformat() if self.invited_at else None,
+            'responded_at': self.responded_at.isoformat() if self.responded_at else None,
+            'note': self.note,
+            'kol': self.kol.to_dict() if getattr(self, 'kol', None) else None
         }
 

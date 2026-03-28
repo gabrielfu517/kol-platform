@@ -20,7 +20,12 @@ const Navbar: React.FC = () => {
       <div className="flex gap-8 items-center">
         <Link to="/" className="text-gray-600 font-medium hover:text-primary transition-colors">Dashboard</Link>
         <Link to="/kols" className="text-gray-600 font-medium hover:text-primary transition-colors">KOLs</Link>
-        <Link to="/campaigns" className="text-gray-600 font-medium hover:text-primary transition-colors">Campaigns</Link>
+        {(user?.role === 'admin' || user?.role === 'client') && (
+          <Link to="/jobs" className="text-gray-600 font-medium hover:text-primary transition-colors">Jobs</Link>
+        )}
+        {user?.role === 'kol' && (
+          <Link to="/my-jobs" className="text-gray-600 font-medium hover:text-primary transition-colors">My Jobs</Link>
+        )}
         {user?.role === 'admin' && (
           <Link to="/invites" className="text-gray-600 font-medium hover:text-primary transition-colors">
             📧 Invites
