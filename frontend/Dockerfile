@@ -6,8 +6,13 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Clear npm cache and install dependencies
+RUN npm cache clean --force && \
+    npm config set registry https://registry.npmjs.org && \
+    npm config set fetch-retries 5 && \
+    npm config set fetch-retry-maxtimeout 120000 && \
+    npm config set fetch-timeout 600000 && \
+    npm ci --prefer-offline --no-audit
 
 # Copy source code
 COPY . .
