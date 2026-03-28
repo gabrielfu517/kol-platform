@@ -39,12 +39,12 @@ const Dashboard: React.FC = () => {
           <div className="mt-2 text-sm opacity-75">📊 In database</div>
         </div>
         <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 animate-scale-in" style={{ animationDelay: '0.1s' }}>
-          <div className="text-sm opacity-90 mb-2 uppercase tracking-wide">Total Campaigns</div>
+          <div className="text-sm opacity-90 mb-2 uppercase tracking-wide">Total Jobs</div>
           <div className="text-5xl font-bold">{stats?.total_campaigns || 0}</div>
           <div className="mt-2 text-sm opacity-75">🚀 Created</div>
         </div>
         <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 animate-scale-in" style={{ animationDelay: '0.2s' }}>
-          <div className="text-sm opacity-90 mb-2 uppercase tracking-wide">Active Campaigns</div>
+          <div className="text-sm opacity-90 mb-2 uppercase tracking-wide">Active Jobs</div>
           <div className="text-5xl font-bold">{stats?.active_campaigns || 0}</div>
           <div className="mt-2 text-sm opacity-75">⚡ Running</div>
         </div>
@@ -66,15 +66,15 @@ const Dashboard: React.FC = () => {
             </p>
           </div>
           <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100 hover:shadow-md transition-all">
-            <h3 className="mb-2 font-semibold text-green-900">🚀 Create Campaigns</h3>
+            <h3 className="mb-2 font-semibold text-green-900">🚀 Create Jobs</h3>
             <p className="text-green-700">
-              Launch marketing campaigns and connect with the right influencers for your brand.
+              Create jobs and invite the right KOLs for your brand.
             </p>
           </div>
           <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-100 hover:shadow-md transition-all">
             <h3 className="mb-2 font-semibold text-purple-900">📈 Track Performance</h3>
             <p className="text-purple-700">
-              Monitor your campaigns and analyze engagement metrics in real-time.
+              Monitor your jobs and analyze engagement metrics in real-time.
             </p>
           </div>
           {user?.role === 'admin' && (

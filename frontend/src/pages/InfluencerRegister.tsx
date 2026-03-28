@@ -156,7 +156,7 @@ const InfluencerRegister: React.FC = () => {
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li>Allow us to access your Instagram profile information (username, followers count, media)</li>
                   <li>Let us display your profile and statistics to potential brand partners</li>
-                  <li>Receive notifications about campaign opportunities</li>
+                  <li>Receive notifications about job opportunities</li>
                   <li>Our platform's terms of service and privacy policy</li>
                 </ul>
                 <p className="mt-4 text-xs text-blue-600">
@@ -227,7 +227,7 @@ const InfluencerRegister: React.FC = () => {
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2">✓</span>
-                  <span>Get matched with relevant campaigns faster</span>
+                  <span>Get matched with relevant jobs faster</span>
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2">✓</span>
@@ -291,7 +291,7 @@ const InfluencerRegister: React.FC = () => {
               <ul className="text-left space-y-2 text-green-800">
                 <li className="flex items-start">
                   <span className="mr-2">📧</span>
-                  <span>Check your email for campaign opportunities</span>
+                  <span>Check your email for job opportunities</span>
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2">🔔</span>
