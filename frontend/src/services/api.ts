@@ -128,6 +128,15 @@ export const myJobsAPI = {
   reject: (assignmentId: number) => api.post<JobAssignment>(`/my-jobs/${assignmentId}/reject`, {}),
 };
 
+// Backwards-compat shim (legacy Campaigns pages still routed in some builds)
+export const campaignAPI = {
+  getAll: () => api.get<Campaign[]>('/campaigns'),
+  getOne: (id: number) => api.get<Campaign>(`/campaigns/${id}`),
+  create: (data: Partial<Campaign>) => api.post<Campaign>('/campaigns', data),
+  update: (id: number, data: Partial<Campaign>) => api.put<Campaign>(`/campaigns/${id}`, data),
+  delete: (id: number) => api.delete(`/campaigns/${id}`),
+};
+
 // Stats
 export const statsAPI = {
   getStats: () => api.get('/stats'),
