@@ -27,13 +27,13 @@ const JobForm: React.FC = () => {
   const [kols, setKols] = useState<KOL[]>([]);
   const [inviteKolIds, setInviteKolIds] = useState<number[]>([]);
 
-  const [form, setForm] = useState<Partial<Job> & { content_types: string[]; restrictions: string[] }>({
+  const [form, setForm] = useState<Partial<Job> & { content_types: string[]; restrictions: string[]; budget?: string | number }>({
     title: '',
     description: '',
     restaurant_name: '',
     address: '',
     will_pay: false,
-    budget: 0,
+    budget: '',
     suggested_turnaround_days: 7,
     content_types: ['post'],
     restrictions: [],
@@ -72,12 +72,24 @@ const JobForm: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
+      // Normalize budget: allow empty string; backend requires >0 if will_pay
+      const payload: any = { ...form };
+      if (form.will_pay) {
+        if (form.budget === '' || Number(form.budget) <= 0) {
+          setLoading(false);
+          setError('Please enter a budget greater than 0 when Will pay is enabled.');
+          return;
+        }
+        payload.budget = Number(form.budget);
+      } else {
+        delete payload.budget;
+      }
       let saved: Job;
       if (editing) {
-        const { data } = await jobsAPI.update(Number(id), form);
+        const { data } = await jobsAPI.update(Number(id), payload);
         saved = data;
       } else {
-        const { data } = await jobsAPI.create(form);
+        const { data } = await jobsAPI.create(payload);
         saved = data;
       }
       // publish if wanted and send invites
@@ -147,7 +159,7 @@ const JobForm: React.FC = () => {
             placeholder="Budget"
             name="budget"
             type="number"
-            value={form.budget || 0}
+            value={(form.budget as any) ?? ''}
             onChange={handleChange}
           />
         )}
@@ -204,16 +216,57 @@ const JobForm: React.FC = () => {
             onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as any }))}
           >
             <option value="draft">Draft</option>
-            <option value="published">Published</option>
-            <option value="closed">Closed</option>
+            {!editing && <option value="published">Active</option>}
+            {editing && (
+              <>
+                <option value="published">Active</option>
+                <option value="closed">Closed</option>
+              </>
+            )}
           </select>
         </div>
 
         <div>
           <div className="font-medium mb-2">Invite KOLs</div>
+          <div className="flex items-center gap-2 mb-2">
+            <input
+              type="text"
+              placeholder="Search KOLs by name or email"
+              className="border rounded px-3 py-2 flex-1"
+              onChange={(e) => {
+                const q = e.target.value.toLowerCase();
+                kolAPI.getAll().then(({ data }) => {
+                  setKols(
+                    data.filter(
+                      (k) =>
+                        k.name.toLowerCase().includes(q) ||
+                        k.email.toLowerCase().includes(q)
+                    )
+                  );
+                });
+              }}
+            />
+            <button
+              type="button"
+              className="px-3 py-2 border rounded"
+              onClick={() => setInviteKolIds(kols.map((k) => k.id))}
+            >
+              Select all
+            </button>
+            <button
+              type="button"
+              className="px-3 py-2 border rounded"
+              onClick={() => setInviteKolIds([])}
+            >
+              Clear
+            </button>
+          </div>
+          <div className="text-sm text-gray-600 mb-2">
+            Selected: {inviteKolIds.length}
+          </div>
           <select
             multiple
-            className="border rounded px-3 py-2 w-full h-40"
+            className="border rounded px-3 py-2 w-full h-48"
             value={inviteKolIds.map(String)}
             onChange={(e) => {
               const selected = Array.from(e.target.selectedOptions).map((o) => Number(o.value));
