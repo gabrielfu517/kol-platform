@@ -75,8 +75,10 @@ const JobForm: React.FC = () => {
       // Normalize budget: allow empty string; backend requires >0 if will_pay
       const payload: any = { ...form };
       if (form.will_pay) {
-        const budgetNum =
-          form.budget === '' || form.budget === undefined ? NaN : Number((form.budget as any));
+        const isEmpty =
+          form.budget === undefined ||
+          (typeof form.budget === 'string' && (form.budget as string).trim() === '');
+        const budgetNum = isEmpty ? NaN : Number((form.budget as any));
         if (Number.isNaN(budgetNum) || budgetNum <= 0) {
           setLoading(false);
           setError('Please enter a budget greater than 0 when Will pay is enabled.');
