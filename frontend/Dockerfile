@@ -6,6 +6,10 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
+# Reduce memory usage during React build on low-RAM hosts
+ENV NODE_OPTIONS="--max-old-space-size=256"
+ENV GENERATE_SOURCEMAP=false
+
 # Clear npm cache and install dependencies
 RUN npm cache clean --force && \
     npm config set registry https://registry.npmjs.org && \
