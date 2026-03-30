@@ -9,8 +9,9 @@ import Dashboard from './pages/Dashboard';
 import KOLs from './pages/KOLs';
 import KOLDetail from './pages/KOLDetail';
 import KOLForm from './pages/KOLForm';
-import Campaigns from './pages/Campaigns';
-import CampaignForm from './pages/CampaignForm';
+import Jobs from './pages/Jobs';
+import JobForm from './pages/JobForm';
+import MyJobs from './pages/MyJobs';
 import InfluencerRegister from './pages/InfluencerRegister';
 import InstagramCallback from './pages/InstagramCallback';
 import InfluencerInvites from './pages/InfluencerInvites';
@@ -88,36 +89,48 @@ function App() {
           />
           
           <Route
-            path="/campaigns"
+            path="/jobs"
             element={
               <PrivateRoute>
                 <div className="min-h-screen flex flex-col">
                   <Navbar />
-                  <Campaigns />
+                  <Jobs />
                 </div>
               </PrivateRoute>
             }
           />
-          
+
           <Route
-            path="/campaigns/new"
+            path="/jobs/new"
             element={
               <PrivateRoute>
                 <div className="min-h-screen flex flex-col">
                   <Navbar />
-                  <CampaignForm />
+                  <JobForm />
                 </div>
               </PrivateRoute>
             }
           />
-          
+
           <Route
-            path="/campaigns/:id/edit"
+            path="/jobs/:id/edit"
             element={
               <PrivateRoute>
                 <div className="min-h-screen flex flex-col">
                   <Navbar />
-                  <CampaignForm />
+                  <JobForm />
+                </div>
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/my-jobs"
+            element={
+              <PrivateRoute>
+                <div className="min-h-screen flex flex-col">
+                  <Navbar />
+                  <MyJobs />
                 </div>
               </PrivateRoute>
             }
