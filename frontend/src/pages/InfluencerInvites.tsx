@@ -100,7 +100,7 @@ const InfluencerInvites: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="container">
+      <div className="max-w-7xl mx-auto px-8 py-8 flex-1">
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
@@ -109,7 +109,7 @@ const InfluencerInvites: React.FC = () => {
   }
 
   return (
-    <div className="container">
+    <div className="max-w-7xl mx-auto px-8 py-8 flex-1">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
